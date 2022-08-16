@@ -1,0 +1,31 @@
+{% extends 'crud_app/base.html' %}
+{% load static %}
+
+{% block title %}
+  Login Page
+{% endblock title %}
+
+{% block content %}
+    <h3>Employee Login</h3>
+    {% for message in messages %}
+      <strong>
+        {{ message }}
+      </strong>
+    {% endfor %}
+    <form action="" method="post">
+        {% csrf_token %}
+
+        {% comment %} <label style="padding-right: 7px"> employee_id: </label> <input type="number" name="employee_id" id="emp-id" required> <br><br>
+        <label style="padding-right: 7px"> Name: </label>  <input type="text" name="first_name" id="first-name"> <br><br>
+        <label style="padding-right: 7px"> job_role: </label>    <input type="text" name="job_role" id="job-role" required> <br><br> {% endcomment %}
+
+        <label style="padding-right: 7px"> Email: </label> <input type="email" name="email" id="email" required> <br><br>
+        {% comment %} <label style="padding-right: 7px"> OTP: </label>  <input type="text" name="first_name" id="first-name"> <br><br> {% endcomment %}
+
+
+        {% comment %} <button type="submit" value="Submit" class="btn btn-success">Login</button> {% endcomment %}
+        <input class="btn btn-success" type="submit" value="Send Otp">
+        <button type="reset" value="Reset" class="btn btn-info">Reset</button>
+    </form>
+    <p>Have You a account ? If Not <a href="{% url 'home' %}">Ragister</a></p>
+{% endblock content %}

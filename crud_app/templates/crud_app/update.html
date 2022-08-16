@@ -1,0 +1,21 @@
+{% extends 'crud_app/base.html' %}
+
+{% block title %}
+  Edit Data
+{% endblock title %}
+
+{% block content %}
+  <div class="container">
+    <h3>Edit Employee</h3>
+    <form method="post">
+        {% csrf_token %}
+        <label> first_name: </label>  <input type="text" name="first_name" id="first-name" value="{{employee.first_name}}"> <br><br>
+        <label> last_name: </label>   <input type="text" name="last_name" id="last-name" value="{{employee.last_name}}"> <br><br>
+        <label> job_role: </label>    <input type="text" name="job_role" id="job-role" value="{{employee.job_role}}"> <br><br>
+        <label> salary: </label>      <input type="text" name="salary" id="salary" value="{{employee.salary}}"> <br><br>
+
+        <input type="submit" value="update" class="btn btn-success">
+        {% comment %} <button><a href={% url 'edit' employee.employee_id %} style="text-decoration: none;">Update</a></button>     {% endcomment %}
+    </form>
+  </div>
+{% endblock content %}

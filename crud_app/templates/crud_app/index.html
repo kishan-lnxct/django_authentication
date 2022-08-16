@@ -1,0 +1,27 @@
+{% extends 'crud_app/base.html' %}
+{% load static %}
+
+{% block title %}
+  Home Page
+{% endblock title %}
+
+{% comment %} <script src="{% static '/js/script.js' %}" type="text/javascript"></script>   {% endcomment %}
+
+{% block content %}
+    <script src="{% static '/js/index.js' %}" type="text/javascript"></script> 
+    <h3>Employee Ragistration</h3> <a href="{% url 'login' %}" class="btn btn-primary"> Login </a>
+    <form action="" method="post">
+        {% csrf_token %}
+
+        <label style="padding-right: 7px"> employee_id: </label> <input type="number" name="employee_id" id="emp-id" required> <br><br>
+        <label style="padding-right: 7px"> first_name: </label>  <input type="text" name="first_name" id="first-name"> <br><br>
+        <label style="padding-right: 7px"> last_name: </label>   <input type="text" name="last_name" id="last-name"> <br><br>
+        <label style="padding-right: 7px"> Email: </label>   <input type="email" name="email" id="email" required> <br><br>
+        <label style="padding-right: 7px"> job_role: </label>    <input type="text" name="job_role" id="job-role" required> <br><br>
+        <label style="padding-right: 7px"> salary: </label>      <input type="number" name="salary" id="salary"> <br><br>
+
+        <input class="btn btn-success" type="submit" value="submit">
+
+        <button type="reset" value="Reset" class="btn btn-info">Reset</button>
+    </form>
+{% endblock content %}

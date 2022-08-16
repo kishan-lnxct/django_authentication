@@ -1,0 +1,20 @@
+{% extends 'crud_app/base.html' %}
+{% load static %}
+
+{% block title %}
+  OTP Verification
+{% endblock title %}
+
+{% block content %}
+    <h3>OTP Verification</h3>
+    <form action="" method="post">
+        {% csrf_token %}
+        <label style="padding-right: 7px"> OTP: </label>  <input type="number" name="otp_email" id="otp_email"> <br><br>
+
+
+        {% comment %} <button type="submit" value="Submit" class="btn btn-success">Login</button> {% endcomment %}
+        <input class="btn btn-success" type="submit" value="Submit">
+        <button type="reset" value="Reset" class="btn btn-info">Reset</button>
+    </form>
+    {% comment %} <p>Have You a account ? If Not <a href="{% url 'home' %}">Ragister</a></p> {% endcomment %}
+{% endblock content %}

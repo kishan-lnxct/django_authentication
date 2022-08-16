@@ -1,0 +1,35 @@
+{% extends 'crud_app/base.html' %}
+
+{% block title %}
+  Show Data
+{% endblock title %}
+
+{% block content %}
+    <h3>Employee Information</h3> 
+    <a href={% url 'home' %} style="text-decoration: none;" class="btn btn-outline-primary">Add Data</a>
+    <a href={% url 'logout' %} style="text-decoration: none;" class="btn btn-outline-primary">logout</a>
+    <table class="table table-striped mt-3">
+        <tr>
+            <th scope="col">employee_id</th>
+            <th scope="col">first_name</th>
+            <th scope="col">last_name</th>
+            <th scope="col">job_role</th>
+            <th scope="col">salary</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        
+        {% for employee in employee_data %}
+        <tr>
+            <td>{{ employee.employee_id }}</td>
+            <td>{{employee.first_name}}</td>
+            <td>{{employee.last_name}}</td>
+            <td>{{ employee.job_role }}</td>
+            <td>{{ employee.salary }}</td>
+            <td><a href={% url 'delete' employee.employee_id %} style="text-decoration: none;" class="btn btn-danger">Delete</a></td>
+            <td><a href={% url 'edit' employee.employee_id %} style="text-decoration: none;" class="btn btn-warning">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}
