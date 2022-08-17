@@ -5,7 +5,10 @@
 {% endblock title %}
 
 {% block content %}
-    <h3>Employee Information</h3> 
+    <div>
+        <h3>Employee Information</h3> 
+        <h4 style="text-align: right;">Hello, {{ profile_name }}</h4>
+    </div>
     <a href={% url 'home' %} style="text-decoration: none;" class="btn btn-outline-primary">Add Data</a>
     <a href={% url 'logout' %} style="text-decoration: none;" class="btn btn-outline-primary">logout</a>
     <table class="table table-striped mt-3">

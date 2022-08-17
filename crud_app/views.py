@@ -5,6 +5,8 @@ from django.contrib.auth import logout as emp_logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from django.conf import settings
+from django.db.models import F
 from django.shortcuts import redirect, render
 from django.core.mail import send_mail
 from django.db.models import Q
@@ -14,16 +16,23 @@ import random
 # Create your views here.
 def index(request):
     if request.method == "POST":
-        employee_id = request.POST['employee_id']
+        # employee_id = request.POST['employee_id']
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
         job_role = request.POST['job_role']
         salary = request.POST['salary']
 
-        new_employee = Employee.objects.create(employee_id=employee_id, first_name=first_name, last_name=last_name, email=email, job_role=job_role, salary=salary)
-        new_employee.save()
-        return redirect('/login/')
+        user_exist_check = Employee.objects.filter(Q(first_name=first_name) & Q(last_name=last_name)).exists()
+
+        if not user_exist_check:
+            new_employee = Employee.objects.create(first_name=first_name, last_name=last_name, email=email, job_role=job_role, salary=salary)
+            new_employee.save()
+            return redirect('/login/')
+        else:
+            messages.warning(request, "User Alredy Exist")
+            return redirect('home')
+
     else:
         return render(request, 'crud_app/index.html')
 
@@ -31,9 +40,14 @@ def index(request):
 def show(request):
     if login_check(request):
         employee_data = Employee.objects.all()
+        first_name = request.session['first_name']
+        last_name = request.session['last_name']
+
+        profile_name = f"{first_name} {last_name}"
 
         return render(request, 'crud_app/show_data.html',{
-            "employee_data": employee_data
+            "employee_data": employee_data,
+            "profile_name": profile_name
         })
 
     else:
@@ -43,6 +57,14 @@ def show(request):
 def delete_data(request, emp_id):
     delete_employee = Employee.objects.get(employee_id=emp_id)
     delete_employee.delete()
+
+    count = Employee.objects.count()
+    update_id_test = Employee.objects.all().filter(employee_id=emp_id)[1:]
+    print(update_id_test)
+
+    update_id = Employee.objects.all()
+    if count > 1:
+        update_id.update(employee_id=F('employee_id') - 1)
     return redirect('/show/')
 
 
@@ -66,18 +88,25 @@ def edit_data(request, emp_id):
 
 def login_view(request):
     if request.method == "POST":
-        email = request.POST['email']
+        user_email = request.POST['email']
 
-        employee_login = Employee.objects.filter(email=email).exists()
+        employee_login = Employee.objects.get(email=user_email)
+        first_name = employee_login.first_name
+        last_name = employee_login.last_name
+
         if employee_login:
             otp_genrate = random.randint(1111,9999)
+
             subject = 'OTP Verification'
             message = f"Your Otp Is: {otp_genrate}"
-            email_from = 'kishanlnxct@gmail.com'
-            recipient_list = [email]
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [user_email]
             send_mail( subject, message, email_from, recipient_list )
-            request.session['user_email'] = email
+            
+            request.session['user_email'] = user_email
             request.session['otp_email'] = otp_genrate
+            request.session['first_name'] = first_name
+            request.session['last_name'] = last_name
 
             return redirect('otp_verify')
 
@@ -104,6 +133,8 @@ def logout_view(request):
     try:
         del request.session['user_email']
         del request.session['otp_email']
+        del request.session['first_name']
+        del request.session['last_name']
     except:
         print("Delete session error")
     messages.info(request, "Logged out successfully!")
