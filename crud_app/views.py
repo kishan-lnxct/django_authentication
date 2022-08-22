@@ -40,31 +40,46 @@ def index(request):
 def show(request):
     if login_check(request):
         employee_data = Employee.objects.all()
+        employee_data_count = Employee.objects.count()
+        employee_data_lst = []
+        
+        for data, serial_no in zip(employee_data, range(1,employee_data_count+1)):
+            employee_data_lst.append({
+                'serial_no':serial_no,
+                'employee_id': data.employee_id,
+                'first_name':data.first_name,
+                'last_name':data.last_name,
+                'job_role':data.job_role,
+                'salary':data.salary
+            })
+        
+        # print(employee_data_lst)
+            
+
         first_name = request.session['first_name']
         last_name = request.session['last_name']
 
         profile_name = f"{first_name} {last_name}"
 
         return render(request, 'crud_app/show_data.html',{
-            "employee_data": employee_data,
+            "employee_data": employee_data_lst,
             "profile_name": profile_name
         })
 
     else:
         return redirect('login')
 
-
 def delete_data(request, emp_id):
     delete_employee = Employee.objects.get(employee_id=emp_id)
     delete_employee.delete()
 
-    count = Employee.objects.count()
-    update_id_test = Employee.objects.all().filter(employee_id=emp_id)[1:]
-    print(update_id_test)
+    # count = Employee.objects.count()
+    # update_id_test = Employee.objects.all().filter(employee_id=emp_id)[1:]
+    # print(update_id_test)
 
-    update_id = Employee.objects.all()
-    if count > 1:
-        update_id.update(employee_id=F('employee_id') - 1)
+    # update_id = Employee.objects.all()
+    # if count > 1:
+    #     update_id.update(employee_id=F('employee_id') - 1)
     return redirect('/show/')
 
 
@@ -112,7 +127,7 @@ def login_view(request):
 
     return render(request, 'crud_app/login.html')
 
-
+    
     # if request.method == "POST":    
     #     employee_id = request.POST['email']
     #     job_role = request.POST['job_role']
@@ -145,7 +160,7 @@ def login_check(request):
     try:
         if request.session['user_email']:
             return True
-        else:
+        else:   
             return False
     except:
         return False
