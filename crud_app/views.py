@@ -104,29 +104,27 @@ def edit_data(request, emp_id):
 def login_view(request):
     if request.method == "POST":
         user_email = request.POST['email']
+        try:
+            employee_login = Employee.objects.get(email=user_email)
+            first_name = employee_login.first_name
+            last_name = employee_login.last_name
 
-        employee_login = Employee.objects.get(email=user_email)
+            if employee_login:
+                otp_genrate = random.randint(1111,9999)
 
-        print(employee_login, "*******************************")
-        first_name = employee_login.first_name
-        last_name = employee_login.last_name
+                subject = 'OTP Verification'
+                message = f"Your Otp Is: {otp_genrate}"
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [user_email]
+                send_mail( subject, message, email_from, recipient_list )
+                
+                request.session['user_email'] = user_email
+                request.session['otp_email'] = otp_genrate
+                request.session['first_name'] = first_name
+                request.session['last_name'] = last_name
 
-        if employee_login:
-            otp_genrate = random.randint(1111,9999)
-
-            subject = 'OTP Verification'
-            message = f"Your Otp Is: {otp_genrate}"
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [user_email]
-            send_mail( subject, message, email_from, recipient_list )
-            
-            request.session['user_email'] = user_email
-            request.session['otp_email'] = otp_genrate
-            request.session['first_name'] = first_name
-            request.session['last_name'] = last_name
-
-            return redirect('otp_verify')
-        else:
+                return redirect('otp_verify')
+        except:
             messages.info(request, "Invalid Email")
             return redirect('login')
 

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_nose',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,13 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'kishanlnxct@gmail.com'
 EMAIL_HOST_PASSWORD = 'wwtiteawromapzxw'
 EMAIL_USE_TLS = True
+
+
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'foo' and 'bar' apps
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=crud_app',
+]
