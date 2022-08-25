@@ -106,6 +106,8 @@ def login_view(request):
         user_email = request.POST['email']
 
         employee_login = Employee.objects.get(email=user_email)
+
+        print(employee_login, "*******************************")
         first_name = employee_login.first_name
         last_name = employee_login.last_name
 
@@ -124,6 +126,9 @@ def login_view(request):
             request.session['last_name'] = last_name
 
             return redirect('otp_verify')
+        else:
+            messages.info(request, "Invalid Email")
+            return redirect('login')
 
     return render(request, 'crud_app/login.html')
 
